@@ -102,7 +102,7 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
     return zip_buffer
 
 # Streamlit UI
-st.title("Image Downloader and Remove background from images")
+st.title("Shobbak Photo Tool")
 
 # Page layout
 st.markdown("## Section 1")
