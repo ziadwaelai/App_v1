@@ -105,7 +105,7 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
 st.title("Shobbak Photo Tool")
 
 # Page layout
-st.markdown("## Section 1")
+#st.markdown("## Section 1")
 col1, col2 = st.columns([1, 2])
 
 with col1:
@@ -117,7 +117,7 @@ with col2:
     resize_fg = st.checkbox("Resize foreground image to center on background")
 
 # Second section for preview and download
-st.markdown("## Section 2")
+st.markdown("## Preview")
 
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
