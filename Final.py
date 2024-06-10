@@ -102,7 +102,7 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
     return zip_buffer
 
 # Streamlit UI
-st.title("PhotoMater")
+st.title("PhotoMaster")
 
 # Page layout
 #st.markdown("## Section 1")
@@ -139,7 +139,7 @@ if uploaded_files:
             else:
                 df = pd.read_csv(uploaded_file)
             
-            if 'links' in df.columns and 'name' in df.columns:
+            if 'links' in df.columns and 'name' or 'names' in df.columns:
                 df.dropna(subset=['links'], inplace=True)
                 images_info = list(zip(df['name'], df['links']))
             else:
