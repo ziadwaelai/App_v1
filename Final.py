@@ -105,20 +105,20 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
 st.title("PhotoMaster")
 
 # Page layout
-#st.markdown("## Section 1")
-col1, col2 = st.columns([1, 2])
+col1, col2 = st.columns([2, 1])
 
 with col1:
+    # st.markdown("<div  width='200' height='200'>upload</div>")
+    st.markdown("")
     uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 
 with col2:
-    remove_bg = st.checkbox("Remove background from images")
+    st.markdown("")
+    remove_bg = st.checkbox("Remove background and Auto Resize 1024*1024")
     add_bg = st.checkbox("Add background to images")
     resize_fg = st.checkbox("Resize foreground image to center on background")
 
-# Second section for preview and download
-st.markdown("## Preview")
-
+images_info = []
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
         file_type = 'excel'
@@ -130,8 +130,6 @@ if uploaded_files:
     if file_type == 'mixed':
         st.error("You should work with one type of file: either an Excel file or images.")
     else:
-        images_info = []
-        
         if file_type == 'excel':
             uploaded_file = uploaded_files[0]
             if uploaded_file.name.endswith('.xlsx'):
@@ -139,7 +137,7 @@ if uploaded_files:
             else:
                 df = pd.read_csv(uploaded_file)
             
-            if 'links' in df.columns and 'name' or 'names' in df.columns:
+            if 'links' in df.columns and ('name' in df.columns or 'names' in df.columns):
                 df.dropna(subset=['links'], inplace=True)
                 images_info = list(zip(df['name'], df['links']))
             else:
@@ -148,49 +146,50 @@ if uploaded_files:
         elif file_type == 'images':
             images_info = [(file.name, file) for file in uploaded_files]
 
-        if images_info:
-            bg_image = None
-            if add_bg:
-                bg_file = st.file_uploader("Upload background image", type=["jpg", "jpeg", "png"])
-                if bg_file:
-                    bg_image = resize_image(bg_file.read())
+if images_info:
+    bg_image = None
+    if add_bg:
+        bg_file = st.file_uploader("Upload background image", type=["jpg", "jpeg", "png"])
+        if bg_file:
+            bg_image = resize_image(bg_file.read())
 
-            cols = st.columns(2)
-            for i, (name, url_or_file) in enumerate(images_info):
-                col = cols[i % 2]
-                with col:
-                    if isinstance(url_or_file, str):
-                        url = convert_drive_link(url_or_file)
-                        image_content = download_image(url)
-                    else:
-                        image_content = url_or_file.read()
-                    
-                    if image_content:
-                        if remove_bg:
-                            processed_image = remove_background(image_content)
-                            ext = 'png'
-                        else:
-                            processed_image = resize_image(image_content)
-                            ext = 'jpeg'
-                        
-                        if add_bg and bg_image:
-                            processed_image = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg)
-                            ext = 'png'
-                        
-                        if processed_image:
-                            st.image(processed_image, caption=name)
-                            st.download_button(
-                                label=f"Download {name}",
-                                data=processed_image,
-                                file_name=f"{name}.{ext}",
-                                mime=f"image/{ext}"
-                            )
+    st.markdown("## Preview")
+    if st.button("Download All Images", key="download_all"):
+        zip_buffer = download_all_images_as_zip(images_info, remove_bg=remove_bg, add_bg=add_bg, bg_image=bg_image, resize_foreground=resize_fg)
+        st.download_button(
+            label="Download All Images as ZIP",
+            data=zip_buffer,
+            file_name="all_images.zip",
+            mime="application/zip"
+        )
 
-            if st.button("Download All Images"):
-                zip_buffer = download_all_images_as_zip(images_info, remove_bg=remove_bg, add_bg=add_bg, bg_image=bg_image, resize_foreground=resize_fg)
-                st.download_button(
-                    label="Download All Images as ZIP",
-                    data=zip_buffer,
-                    file_name="all_images.zip",
-                    mime="application/zip"
-                )
+    cols = st.columns(2)
+    for i, (name, url_or_file) in enumerate(images_info):
+        col = cols[i % 2]
+        with col:
+            if isinstance(url_or_file, str):
+                url = convert_drive_link(url_or_file)
+                image_content = download_image(url)
+            else:
+                image_content = url_or_file.read()
+            
+            if image_content:
+                if remove_bg:
+                    processed_image = remove_background(image_content)
+                    ext = 'png'
+                else:
+                    processed_image = resize_image(image_content)
+                    ext = 'jpeg'
+                
+                if add_bg and bg_image:
+                    processed_image = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg)
+                    ext = 'png'
+                
+                if processed_image:
+                    st.image(processed_image, caption=name)
+                    st.download_button(
+                        label=f"Download {name}",
+                        data=processed_image,
+                        file_name=f"{name}.{ext}",
+                        mime=f"image/{ext}"
+                    )
