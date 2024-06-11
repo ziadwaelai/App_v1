@@ -11,7 +11,7 @@ from transformers import pipeline
 
 st.markdown("""
     <style>
-    .st-emotion-cache-1erivf3 {
+    .st-emotion-cache-1erivf3,.st-emotion-cache-1gulkj5 {
        display: flex;
        -webkit-box-align: center;
        align-items: center;
