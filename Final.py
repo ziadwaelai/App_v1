@@ -114,20 +114,20 @@ with col1:
 #st.set_page_config(page_title="Shobbak Tool", layout="wide")
 
 # Custom CSS to style the buttons and other elements
-st.markdown("""
-    <style>
-    .st-emotion-cache-1erivf3 {
-       display: flex;
-       -webkit-box-align: center;
-       align-items: center;
-       flex-direction: column;
-       justify-content: space-around;
-       height: 150px;
+# st.markdown("""
+#     <style>
+#     .st-emotion-cache-1erivf3 {
+#        display: flex;
+#        -webkit-box-align: center;
+#        align-items: center;
+#        flex-direction: column;
+#        justify-content: space-around;
+#        height: 150px;
        
-       }
+#        }
        
-    </style>
-    """, unsafe_allow_html=True)
+#     </style>
+#     """, unsafe_allow_html=True)
 
     uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 
@@ -212,3 +212,19 @@ if images_info:
                         file_name=f"{name}.{ext}",
                         mime=f"image/{ext}"
                     )
+
+
+st.markdown("""
+    <style>
+    .st-emotion-cache-1erivf3 {
+       display: flex;
+       -webkit-box-align: center;
+       align-items: center;
+       flex-direction: column;
+       justify-content: space-around;
+       height: 150px;
+       
+       }
+       
+    </style>
+    """, unsafe_allow_html=True)
