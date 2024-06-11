@@ -109,7 +109,7 @@ col1, col2 = st.columns([2, 1])
 
 with col1:
     # st.markdown("<div  width='200' height='200'>upload</div>")
-    st.markdown("")
+    # st.markdown("")
     # Set page title and layout
 #st.set_page_config(page_title="Shobbak Tool", layout="wide")
 
