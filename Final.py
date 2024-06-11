@@ -110,6 +110,25 @@ col1, col2 = st.columns([2, 1])
 with col1:
     # st.markdown("<div  width='200' height='200'>upload</div>")
     st.markdown("")
+    # Set page title and layout
+#st.set_page_config(page_title="Shobbak Tool", layout="wide")
+
+# Custom CSS to style the buttons and other elements
+st.markdown("""
+    <style>
+    .st-emotion-cache-1erivf3 {
+       display: flex;
+       -webkit-box-align: center;
+       align-items: center;
+       flex-direction: column;
+       justify-content: space-around;
+       height: 150px;
+       
+       }
+       
+    </style>
+    """, unsafe_allow_html=True)
+
     uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 
 with col2:
