@@ -7,6 +7,24 @@ from PIL import Image, UnidentifiedImageError
 import re
 from transformers import pipeline
 
+
+
+st.markdown("""
+    <style>
+    .st-emotion-cache-1erivf3 {
+       display: flex;
+       -webkit-box-align: center;
+       align-items: center;
+       flex-direction: column;
+       justify-content: space-around;
+       height: 175px;
+       
+       }
+       
+    </style>
+    """, unsafe_allow_html=True)
+
+
 # Function to convert Google Drive link to direct download link
 def convert_drive_link(link):
     match = re.search(r'/d/([^/]+)', link)
@@ -214,17 +232,3 @@ if images_info:
                     )
 
 
-st.markdown("""
-    <style>
-    .st-emotion-cache-1erivf3 {
-       display: flex;
-       -webkit-box-align: center;
-       align-items: center;
-       flex-direction: column;
-       justify-content: space-around;
-       height: 175px;
-       
-       }
-       
-    </style>
-    """, unsafe_allow_html=True)
