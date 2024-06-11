@@ -222,7 +222,7 @@ st.markdown("""
        align-items: center;
        flex-direction: column;
        justify-content: space-around;
-       height: 150px;
+       height: 175px;
        
        }
        
