@@ -254,14 +254,14 @@ if images_info:
 # Footer section
 st.markdown("""---""")  # Creates a horizontal line for separation
 
-footer_text = "<h5>&copy;</h5>All rights are reserved to the superpowers"
+footer_text = "All rights are reserved to the superpowers"
 
 footer_html = f"""<style>
 .footer {{
   text-align: center;
 }}
 </style>
-<div class="footer">{footer_text}</div>
+<div class="footer"><h5>&copy;</h5> {footer_text}</div>
 """
 
 st.markdown(footer_html, unsafe_allow_html=True)
