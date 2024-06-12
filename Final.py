@@ -148,7 +148,7 @@ with col1:
 #     """, unsafe_allow_html=True)
 
     #uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
-    uploaded_files = st.file_uploader(type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 with col2:
     st.markdown("")
     remove_bg = st.checkbox("Remove background")
