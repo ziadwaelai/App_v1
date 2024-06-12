@@ -8,7 +8,7 @@ import re
 from transformers import pipeline
 
 
-
+#css upload file
 st.markdown("""
     <style>
     .st-emotion-cache-1erivf3,.st-emotion-cache-1gulkj5 {
@@ -23,6 +23,16 @@ st.markdown("""
        
     </style>
     """, unsafe_allow_html=True)
+
+st.set_page_config(
+    page_title="PhotoMaster",
+    page_icon="🖼️",
+
+    layout="wide",
+)
+
+# ---------- HEADER ----------
+st.title("🖼️ Welcome to PhotoMaster!")
 
 
 # Function to convert Google Drive link to direct download link
