@@ -252,20 +252,20 @@ if images_info:
 
 
 # Footer section
-footer_text = "All rights are reserved to the superpowers"
-symbol = "© "
-footer_html = f"""<style>
-.footer {{
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  background-color: #f0f0f0;  /* Optional background color */
-  padding: 10px;  /* Optional padding */
-}}
-</style>
-<div class="footer"><h2>{symbol}</h2> {footer_text}</div>
-"""
+# footer_text = "All rights are reserved to the superpowers"
+# symbol = "© "
+# footer_html = f"""<style>
+# .footer {{
+#   position: fixed;
+#   left: 0;
+#   bottom: 0;
+#   width: 100%;
+#   text-align: center;
+#   background-color: #f0f0f0;  /* Optional background color */
+#   padding: 10px;  /* Optional padding */
+# }}
+# </style>
+# <div class="footer"><h2>{symbol}</h2> {footer_text}</div>
+# """
 
-st.markdown(footer_html, unsafe_allow_html=True)
+# st.markdown(footer_html, unsafe_allow_html=True)
