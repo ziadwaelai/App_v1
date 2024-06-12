@@ -255,7 +255,16 @@ if images_info:
 st.markdown("""---""")  # Creates a horizontal line for separation
 
 footer_text = "All rights are reserved to the superpowers"
-st.markdown(footer_text, unsafe_allow_html=True)
+
+footer_html = f"""<style>
+.footer {{
+  text-align: center;
+}}
+</style>
+<div class="footer">{footer_text}</div>
+"""
+
+st.markdown(footer_html, unsafe_allow_html=True)
 
 # This ensures the footer remains at the bottom even with growing content
 st.write(" ")  # Add an empty space
