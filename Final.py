@@ -254,7 +254,7 @@ if images_info:
 # Footer section
 st.markdown("""---""")  # Creates a horizontal line for separation
 
-footer_text = "All rights are reserved to the superpowers"
+footer_text = "©All rights are reserved to the superpowers"
 
 footer_html = f"""<style>
 .footer {{
