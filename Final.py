@@ -122,14 +122,14 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# st.set_page_config(
-#     page_title="PhotoMaster",
-#     page_icon="🖼️",
-# )
+st.set_page_config(
+    page_title="PhotoMaster",
+    page_icon="🖼️"
+)
 
 
 # ---------- HEADER ----------
-st.title("🖼️ Welcome to PhotoMaster!")
+st.title("🖼️ Welcome to PhotoMaster")
 
 # Page layout
 col1, col2 = st.columns([2, 1])
