@@ -129,7 +129,7 @@ st.markdown("""
 
 
 # ---------- HEADER ----------
-st.title("🖼️ Welcome to PhotoMaster")
+st.title("🖼️ PhotoMaster")
 
 # Page layout
 col1, col2 = st.columns([2, 1])
