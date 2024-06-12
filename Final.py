@@ -122,10 +122,10 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.set_page_config(
-    page_title="PhotoMaster",
-    page_icon="🖼️"
-)
+# st.set_page_config(
+#     page_title="PhotoMaster",
+#     page_icon="🖼️"
+# )
 
 
 # ---------- HEADER ----------
@@ -241,11 +241,11 @@ if images_info:
                     )
 
 
-# st.markdown("""
-#     <footer>
-#       <h4>All rights are reserved to the superpowers</h4>
-#     </footer>
-#     <style>
+st.markdown("""
+    <footer>
+      <h4>All rights are reserved to the superpowers</h4>
+    </footer>
+    <style>
     
-#     </style>
-#     """, unsafe_allow_html=True)
+    </style>
+    """, unsafe_allow_html=True)
