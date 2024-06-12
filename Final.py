@@ -241,11 +241,21 @@ if images_info:
                     )
 
 
-st.markdown("""
-    <footer>
-      <h4>All rights are reserved to the superpowers</h4>
-    </footer>
-    <style>
+# st.markdown("""
+#     <footer>
+#       <h4>All rights are reserved to the superpowers</h4>
+#     </footer>
+#     <style>
     
-    </style>
-    """, unsafe_allow_html=True)
+#     </style>
+#     """, unsafe_allow_html=True)
+
+
+# Footer section
+st.markdown("""---""")  # Creates a horizontal line for separation
+
+footer_text = "All rights are reserved to the superpowers"
+st.markdown(footer_text, unsafe_allow_html=True)
+
+# This ensures the footer remains at the bottom even with growing content
+st.write(" ")  # Add an empty space
