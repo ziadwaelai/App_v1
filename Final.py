@@ -125,13 +125,6 @@ st.markdown("""
 st.set_page_config(
     page_title="Image WorkDesk",
     page_icon="🖼️",
-    menu_items={
-        "About": f"Image WorkDesk "
-        f"\nApp contact: [Siddhant Sadangi](mailto:siddhant.sadangi@gmail.com)",
-        "Report a Bug": "https://github.com/SiddhantSadangi/ImageWorkdesk/issues/new",
-        "Get help": None,
-    },
-    layout="wide",
 )
 
 
