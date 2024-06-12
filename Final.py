@@ -154,7 +154,7 @@ with col2:
     remove_bg = st.checkbox("Remove background and Auto Resize 1024*1024")
     add_bg = st.checkbox("Add background to images")
     resize_fg = st.checkbox("Resize foreground image to center on background")
-
+    st.checkbox("Compress image")
 images_info = []
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
