@@ -8,31 +8,7 @@ import re
 from transformers import pipeline
 
 
-#css upload file
-st.markdown("""
-    <style>
-    .st-emotion-cache-1erivf3,.st-emotion-cache-1gulkj5 {
-       display: flex;
-       -webkit-box-align: center;
-       align-items: center;
-       flex-direction: column;
-       justify-content: space-around;
-       height: 175px;
-       
-       }
-       
-    </style>
-    """, unsafe_allow_html=True)
 
-# st.set_page_config(
-#     page_title="PhotoMaster",
-#     page_icon="🖼️",
-
-#     layout="wide",
-# )
-
-# ---------- HEADER ----------
-st.title("🖼️ Welcome to PhotoMaster!")
 
 
 # Function to convert Google Drive link to direct download link
@@ -130,7 +106,37 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
     return zip_buffer
 
 # Streamlit UI
-st.title("PhotoMaster")
+#css upload file
+st.markdown("""
+    <style>
+    .st-emotion-cache-1erivf3,.st-emotion-cache-1gulkj5 {
+       display: flex;
+       -webkit-box-align: center;
+       align-items: center;
+       flex-direction: column;
+       justify-content: space-around;
+       height: 175px;
+       
+       }
+       
+    </style>
+    """, unsafe_allow_html=True)
+
+st.set_page_config(
+    page_title="Image WorkDesk",
+    page_icon="🖼️",
+    menu_items={
+        "About": f"Image WorkDesk v{VERSION}  "
+        f"\nApp contact: [Siddhant Sadangi](mailto:siddhant.sadangi@gmail.com)",
+        "Report a Bug": "https://github.com/SiddhantSadangi/ImageWorkdesk/issues/new",
+        "Get help": None,
+    },
+    layout="wide",
+)
+
+
+# ---------- HEADER ----------
+st.title("🖼️ Welcome to PhotoMaster!")
 
 # Page layout
 col1, col2 = st.columns([2, 1])
