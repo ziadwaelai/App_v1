@@ -232,3 +232,11 @@ if images_info:
                     )
 
 
+st.markdown("""
+    <footer>
+      <h4>All rights are reserved to the superpowers</h4>
+    </footer>
+    <style>
+    
+    </style>
+    """, unsafe_allow_html=True)
