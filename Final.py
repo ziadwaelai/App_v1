@@ -147,14 +147,14 @@ with col1:
 #     </style>
 #     """, unsafe_allow_html=True)
 
-    uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
-
+    #uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader(type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 with col2:
     st.markdown("")
-    remove_bg = st.checkbox("Remove background and Auto Resize 1024*1024")
-    add_bg = st.checkbox("Add background to images")
-    resize_fg = st.checkbox("Resize foreground image to center on background")
-    st.checkbox("Compress image")
+    remove_bg = st.checkbox("Remove background")
+    add_bg = st.checkbox("Add background")
+    resize_fg = st.checkbox("Resize")
+    st.checkbox("Compress and Convert Format")
 images_info = []
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
