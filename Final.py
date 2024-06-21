@@ -118,7 +118,7 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
 # Streamlit UI
 st.markdown("""
     <style>
-    .st-emotion-cache-1erivf3, .st-emotion-cache-1gulkj5 {
+    .st-emotion-cache-1erivf3, .st-emotion-cache-1gulkj5, stFileUploadDropzone {
        display: flex;
        -webkit-box-align: center;
        align-items: center;
