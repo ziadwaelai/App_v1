@@ -48,7 +48,7 @@ def remove_background(image_content):
         return None
 
 # Function to combine the foreground image with a background image
-def combine_with_background(foreground_content, background_content, resize_foreground=False, scaling_factor=1.0):
+def combine_with_background(foreground_content, background_content, resize_foreground=False, scaling_factor=80):
     try:
         foreground = Image.open(BytesIO(foreground_content)).convert("RGBA")
         background = Image.open(BytesIO(background_content)).convert("RGBA")
@@ -64,8 +64,8 @@ def combine_with_background(foreground_content, background_content, resize_foreg
             new_height = int(foreground.height * scale_factor)
 
             if new_height > 1024 or new_width > 1024:
-                new_width = int(new_width * scaling_factor/100)
-                new_height = int(new_height * scaling_factor/100)
+                new_width = int(new_width * scaling_factor / 100)
+                new_height = int(new_height * scaling_factor / 100)
 
             foreground = foreground.resize((new_width, new_height))
 
@@ -88,7 +88,7 @@ def combine_with_background(foreground_content, background_content, resize_foreg
         return None, None
 
 # Function to download all images as a ZIP file
-def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_image=None, resize_foreground=False, scaling_factor=1.0):
+def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_image=None, resize_foreground=False, scaling_factor=80):
     zip_buffer = BytesIO()
     with ZipFile(zip_buffer, 'w') as zf:
         for name, url_or_file in images_info:
@@ -142,9 +142,8 @@ with col2:
     remove_bg = st.checkbox("Remove background")
     add_bg = st.checkbox("Add background")
     resize_fg = st.checkbox("Resize")
-    scaling_factor = st.slider("Scaling Factor for Foreground", 50, 100, 10)
+    scaling_factor = st.slider("Scaling Factor for Foreground (%)", 10, 100, 80)
     st.checkbox("Compress and Convert Format")
-    
 
 images_info = []
 if uploaded_files:
