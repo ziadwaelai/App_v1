@@ -7,6 +7,7 @@ from PIL import Image, UnidentifiedImageError
 import re
 from transformers import pipeline
 
+
 # Function to convert Google Drive link to direct download link
 def convert_drive_link(link):
     match = re.search(r'/d/([^/]+)', link)
@@ -48,24 +49,20 @@ def remove_background(image_content):
         return None
 
 # Function to combine the foreground image with a background image
-def combine_with_background(foreground_content, background_content, resize_foreground=False, scaling_factor=80):
+def combine_with_background(foreground_content, background_content, resize_foreground=False):
     try:
         foreground = Image.open(BytesIO(foreground_content)).convert("RGBA")
         background = Image.open(BytesIO(background_content)).convert("RGBA")
         background = background.resize((1024, 1024))
 
         if resize_foreground:
-            # Calculate the scaling factor to cover a percentage of the background
+            # Calculate the scaling factor to cover 70% of the background
             fg_area = foreground.width * foreground.height
             bg_area = background.width * background.height
-            scale_factor = (.8 * bg_area / fg_area) ** 0.5
+            scale_factor = (0.8 * bg_area / fg_area) ** 0.5
 
             new_width = int(foreground.width * scale_factor)
             new_height = int(foreground.height * scale_factor)
-
-            if new_height > 1024 or new_width > 1024:
-                new_width = int(new_width * scaling_factor / 100)
-                new_height = int(new_height * scaling_factor / 100)
 
             foreground = foreground.resize((new_width, new_height))
 
@@ -88,7 +85,7 @@ def combine_with_background(foreground_content, background_content, resize_foreg
         return None, None
 
 # Function to download all images as a ZIP file
-def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_image=None, resize_foreground=False, scaling_factor=80):
+def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_image=None, resize_foreground=False):
     zip_buffer = BytesIO()
     with ZipFile(zip_buffer, 'w') as zf:
         for name, url_or_file in images_info:
@@ -107,7 +104,7 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
                     ext = 'jpeg'
 
                 if add_bg and bg_image:
-                    processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_foreground, scaling_factor=scaling_factor)
+                    processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_foreground)
                     ext = 'png'
 
                 if processed_image:
@@ -116,35 +113,64 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
     return zip_buffer
 
 # Streamlit UI
+#css upload file
 st.markdown("""
     <style>
-    .st-emotion-cache-1erivf3, .st-emotion-cache-1gulkj5,.css-vjj2ce {
+    .st-emotion-cache-1erivf3,.st-emotion-cache-1gulkj5 {
        display: flex;
        -webkit-box-align: center;
        align-items: center;
        flex-direction: column;
        justify-content: space-around;
        height: 175px;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
+       }
+
+    </style>
+    """, unsafe_allow_html=True)
+
+# st.set_page_config(
+#     page_title="PhotoMaster",
+#     page_icon="🖼️"
+# )
+
+
+# ---------- HEADER ----------
 st.title("🖼️ PhotoMaster")
 
 # Page layout
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    uploaded_files = st.file_uploader("", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
+    # st.markdown("<div  width='200' height='200'>upload</div>")
+    # st.markdown("")
+    # Set page title and layout
+#st.set_page_config(page_title="Shobbak Tool", layout="wide")
 
+# Custom CSS to style the buttons and other elements
+# st.markdown("""
+#     <style>
+#     .st-emotion-cache-1erivf3 {
+#        display: flex;
+#        -webkit-box-align: center;
+#        align-items: center;
+#        flex-direction: column;
+#        justify-content: space-around;
+#        height: 150px;
+
+#        }
+
+#     </style>
+#     """, unsafe_allow_html=True)
+
+    #uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 with col2:
     st.markdown("")
     remove_bg = st.checkbox("Remove background")
     add_bg = st.checkbox("Add background")
     resize_fg = st.checkbox("Resize")
-    scaling_factor = st.slider("Scaling Factor for Foreground (%)", 10, 100, 80)
     st.checkbox("Compress and Convert Format")
-
 images_info = []
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
@@ -182,7 +208,7 @@ if images_info:
 
     st.markdown("## Preview")
     if st.button("Download All Images", key="download_all"):
-        zip_buffer = download_all_images_as_zip(images_info, remove_bg=remove_bg, add_bg=add_bg, bg_image=bg_image, resize_foreground=resize_fg, scaling_factor=scaling_factor)
+        zip_buffer = download_all_images_as_zip(images_info, remove_bg=remove_bg, add_bg=add_bg, bg_image=bg_image, resize_foreground=resize_fg)
         st.download_button(
             label="Download All Images as ZIP",
             data=zip_buffer,
@@ -209,7 +235,7 @@ if images_info:
                     ext = 'jpeg'
 
                 if add_bg and bg_image:
-                    processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg, scaling_factor=scaling_factor)
+                    processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg)
                     ext = 'png'
 
                 if processed_image:
