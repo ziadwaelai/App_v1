@@ -243,6 +243,6 @@ if images_info:
                     st.download_button(
                         label=f"Download {name}",
                         data=processed_image,
-                        file_name=f"{name}",
+                        file_name=f"{name}.{ext}",
                         mime=f"image/{ext}"
                     )
