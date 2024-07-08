@@ -232,7 +232,7 @@ if images_info:
                     ext = 'png'
                 else:
                     processed_image = resize_image(image_content)
-                    ext = 'jpeg'
+                    ext = 'png'
 
                 if add_bg and bg_image:
                     processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg)
@@ -241,8 +241,8 @@ if images_info:
                 if processed_image:
                     st.image(processed_image, caption=name)
                     st.download_button(
-                        label=f"Download {name}",
+                        label=f"Download {name.rsplit('.', 1)[0]}",
                         data=processed_image,
-                        file_name=f"{name}.png",
+                        file_name=f"{name.rsplit('.', 1)[0]}.{ext}",
                         mime=f"image/{ext}"
                     )
