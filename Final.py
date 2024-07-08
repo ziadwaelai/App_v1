@@ -101,14 +101,14 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
                     ext = 'png'
                 else:
                     processed_image = resize_image(image_content)
-                    ext = 'jpeg'
+                    ext = 'png'
 
                 if add_bg and bg_image:
                     processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_foreground)
                     ext = 'png'
 
                 if processed_image:
-                    zf.writestr(f"{name}", processed_image)
+                    zf.writestr(f"{name.rsplit('.', 1)[0]}.{ext}}", processed_image)
     zip_buffer.seek(0)
     return zip_buffer
 
