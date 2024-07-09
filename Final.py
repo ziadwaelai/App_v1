@@ -7,7 +7,6 @@ from PIL import Image, UnidentifiedImageError
 import re
 from transformers import pipeline
 
-
 # Function to convert Google Drive link to direct download link
 def convert_drive_link(link):
     match = re.search(r'/d/([^/]+)', link)
@@ -108,7 +107,7 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
                     ext = 'png'
 
                 if processed_image:
-                    zf.writestr(f"{name}", processed_image)
+                    zf.writestr(f"{name.rsplit('.', 1)[0]}.{ext}", processed_image)
     zip_buffer.seek(0)
     return zip_buffer
 
@@ -129,41 +128,12 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# st.set_page_config(
-#     page_title="PhotoMaster",
-#     page_icon="🖼️"
-# )
-
-
-# ---------- HEADER ----------
 st.title("🖼️ PhotoMaster")
 
 # Page layout
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    # st.markdown("<div  width='200' height='200'>upload</div>")
-    # st.markdown("")
-    # Set page title and layout
-#st.set_page_config(page_title="Shobbak Tool", layout="wide")
-
-# Custom CSS to style the buttons and other elements
-# st.markdown("""
-#     <style>
-#     .st-emotion-cache-1erivf3 {
-#        display: flex;
-#        -webkit-box-align: center;
-#        align-items: center;
-#        flex-direction: column;
-#        justify-content: space-around;
-#        height: 150px;
-
-#        }
-
-#     </style>
-#     """, unsafe_allow_html=True)
-
-    #uploaded_files = st.file_uploader("Upload an Excel file (xlsx/csv) or images (jpg/jpeg/png)", type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
     uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
 with col2:
     st.markdown("")
@@ -171,6 +141,7 @@ with col2:
     add_bg = st.checkbox("Add background")
     resize_fg = st.checkbox("Resize")
     st.checkbox("Compress and Convert Format")
+    st.button("Submit")
 images_info = []
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
@@ -186,15 +157,21 @@ if uploaded_files:
         if file_type == 'excel':
             uploaded_file = uploaded_files[0]
             if uploaded_file.name.endswith('.xlsx'):
-                df = pd.read_excel(uploaded_file)
+                xl = pd.ExcelFile(uploaded_file)
+                for sheet_name in xl.sheet_names:
+                    df = xl.parse(sheet_name)
+                    if 'links' in df.columns and ('name' in df.columns):
+                        df.dropna(subset=['links'], inplace=True)
+                        images_info.extend(list(zip(df['name'], df['links'])))
+                    else:
+                        st.error(f"The sheet '{sheet_name}' must contain 'links' and 'name' columns.")
             else:
                 df = pd.read_csv(uploaded_file)
-
-            if 'links' in df.columns and ('name' in df.columns or 'names' in df.columns):
-                df.dropna(subset=['links'], inplace=True)
-                images_info = list(zip(df['name'], df['links']))
-            else:
-                st.error("The uploaded file must contain 'links' and 'name' columns.")
+                if 'links' in df.columns and ('name' in df.columns or 'names' in df.columns):
+                    df.dropna(subset=['links'], inplace=True)
+                    images_info = list(zip(df['name'], df['links']))
+                else:
+                    st.error("The uploaded file must contain 'links' and 'name' columns.")
 
         elif file_type == 'images':
             images_info = [(file.name, file) for file in uploaded_files]
