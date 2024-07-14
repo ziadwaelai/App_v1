@@ -207,7 +207,7 @@ if images_info:
                 if remove_bg:
                     processed_image = remove_background(image_content)
                     ext = 'png'
-                else:
+                if resize_fg:
                     processed_image = resize_image(image_content)
                     ext = 'png'
 
