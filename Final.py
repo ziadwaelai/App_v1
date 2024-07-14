@@ -134,7 +134,7 @@ st.title("🖼️ PhotoMaster")
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png","jfif"], accept_multiple_files=True)
 with col2:
     st.markdown("")
     remove_bg = st.checkbox("Remove background")
