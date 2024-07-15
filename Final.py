@@ -135,7 +135,7 @@ st.title("🖼️ PhotoMaster")
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png","jfif"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png","jfif", "avif", "webp"], accept_multiple_files=True)
 with col2:
     st.markdown("")
     remove_bg = st.checkbox("Remove background")
@@ -164,10 +164,15 @@ if uploaded_files:
                     if 'links' in df.columns and ('name' in df.columns):
                         df.dropna(subset=['links'], inplace=True)
 
-                        # Handle duplicate names
+                        # Handle empty and duplicate names
                         name_count = defaultdict(int)
+                        empty_count = 0
                         unique_images_info = []
                         for name, link in zip(df['name'], df['links']):
+                            if pd.isna(name) or name.strip() == "":
+                                empty_name = f"empty_{empty_count}" if empty_count > 0 else "empty"
+                                name = empty_name
+                                empty_count += 1
                             if name_count[name] > 0:
                                 unique_name = f"{name}_{name_count[name]}"
                             else:
@@ -175,6 +180,10 @@ if uploaded_files:
                             unique_images_info.append((unique_name, link))
                             name_count[name] += 1
                         images_info.extend(unique_images_info)
+
+                        # Show message with the number of empty cells
+                        if empty_count > 0:
+                            st.warning(f"Number of empty cells in 'name' column: {empty_count}")
                     else:
                         st.error(f"The sheet '{sheet_name}' must contain 'links' and 'name' columns.")
             else:
@@ -182,10 +191,15 @@ if uploaded_files:
                 if 'links' in df.columns and ('name' in df.columns or 'names' in df.columns):
                     df.dropna(subset=['links'], inplace=True)
                     
-                    # Handle duplicate names
+                    # Handle empty and duplicate names
                     name_count = defaultdict(int)
+                    empty_count = 0
                     unique_images_info = []
                     for name, link in zip(df['name'], df['links']):
+                        if pd.isna(name) or name.strip() == "":
+                            empty_name = f"empty_{empty_count}" if empty_count > 0 else "empty"
+                            name = empty_name
+                            empty_count += 1
                         if name_count[name] > 0:
                             unique_name = f"{name}_{name_count[name]}"
                         else:
@@ -193,6 +207,10 @@ if uploaded_files:
                         unique_images_info.append((unique_name, link))
                         name_count[name] += 1
                     images_info.extend(unique_images_info)
+
+                    # Show message with the number of empty cells
+                    if empty_count > 0:
+                        st.warning(f"Number of empty cells in 'name' column: {empty_count}")
                 else:
                     st.error("The uploaded file must contain 'links' and 'name' columns.")
 
