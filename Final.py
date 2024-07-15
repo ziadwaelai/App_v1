@@ -6,6 +6,7 @@ from zipfile import ZipFile
 from PIL import Image, UnidentifiedImageError
 import re
 from transformers import pipeline
+from collections import defaultdict
 
 # Function to convert Google Drive link to direct download link
 def convert_drive_link(link):
@@ -162,14 +163,36 @@ if uploaded_files:
                     df = xl.parse(sheet_name)
                     if 'links' in df.columns and ('name' in df.columns):
                         df.dropna(subset=['links'], inplace=True)
-                        images_info.extend(list(zip(df['name'], df['links'])))
+
+                        # Handle duplicate names
+                        name_count = defaultdict(int)
+                        unique_images_info = []
+                        for name, link in zip(df['name'], df['links']):
+                            if name_count[name] > 0:
+                                unique_name = f"{name}_{name_count[name]}"
+                            else:
+                                unique_name = name
+                            unique_images_info.append((unique_name, link))
+                            name_count[name] += 1
+                        images_info.extend(unique_images_info)
                     else:
                         st.error(f"The sheet '{sheet_name}' must contain 'links' and 'name' columns.")
             else:
                 df = pd.read_csv(uploaded_file)
                 if 'links' in df.columns and ('name' in df.columns or 'names' in df.columns):
                     df.dropna(subset=['links'], inplace=True)
-                    images_info = list(zip(df['name'], df['links']))
+                    
+                    # Handle duplicate names
+                    name_count = defaultdict(int)
+                    unique_images_info = []
+                    for name, link in zip(df['name'], df['links']):
+                        if name_count[name] > 0:
+                            unique_name = f"{name}_{name_count[name]}"
+                        else:
+                            unique_name = name
+                        unique_images_info.append((unique_name, link))
+                        name_count[name] += 1
+                    images_info.extend(unique_images_info)
                 else:
                     st.error("The uploaded file must contain 'links' and 'name' columns.")
 
