@@ -100,8 +100,12 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
                     processed_image = remove_background(image_content)
                     ext = 'png'
                 else:
-                    processed_image = resize_image(image_content)
-                    ext = 'png'
+                    ##processed_image = resize_image(image_content)
+                    ##ext = 'png'
+                    ##---------------------------------------------------------------
+                    size = (1290, 789) if "banner" in name.lower() else (1024, 1024)
+                    processed_image = resize_image(image_content, size=size)
+                    ext = "png"
 
                 if add_bg and bg_image:
                     processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_foreground)
@@ -249,8 +253,12 @@ if images_info:
                     processed_image = remove_background(image_content)
                     ext = 'png'
                 else:
-                    processed_image = resize_image(image_content)
-                    ext = 'png'
+                    ##processed_image = resize_image(image_content)
+                    ##ext = 'png'
+                    ##---------------------------------------------------------------
+                    size = (1290, 789) if "banner" in name.lower() else (1024, 1024)
+                    processed_image = resize_image(image_content, size=size)
+                    ext = "png"
 
                 if add_bg and bg_image:
                     processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg)
