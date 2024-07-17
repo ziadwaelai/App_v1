@@ -9,3 +9,4 @@ transformers>=4.39.1
 streamlit
 openpyxl
 pdf2image
+pypdfium2
