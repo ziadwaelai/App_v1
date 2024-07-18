@@ -7,6 +7,7 @@ from PIL import Image, UnidentifiedImageError
 import re
 from transformers import pipeline
 from collections import defaultdict
+import pypdfium2 as pdfium
 
 # Function to convert Google Drive link to direct download link
 def convert_drive_link(link):
@@ -92,6 +93,8 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
             if isinstance(url_or_file, str):
                 url = convert_drive_link(url_or_file)
                 image_content = download_image(url)
+            elif isinstance(url_or_file, bytes):
+                image_content = url_or_file
             else:
                 image_content = url_or_file.read()
 
@@ -100,15 +103,12 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
                     processed_image = remove_background(image_content)
                     ext = 'png'
                 else:
-                    ##processed_image = resize_image(image_content)
-                    ##ext = 'png'
-                    ##---------------------------------------------------------------
                     size = (1290, 789) if "banner" in name.lower() else (1024, 1024)
                     processed_image = resize_image(image_content, size=size)
                     ext = "png"
 
                 if add_bg and bg_image:
-                    processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_foreground)
+                    processed_image, dimensions = combine_with_background(processed_image, bg_image, resize_foreground=resize_fg)
                     ext = 'png'
 
                 if processed_image:
@@ -116,30 +116,13 @@ def download_all_images_as_zip(images_info, remove_bg=False, add_bg=False, bg_im
     zip_buffer.seek(0)
     return zip_buffer
 
-# Streamlit UI
-#css upload file
-st.markdown("""
-    <style>
-    .st-emotion-cache-1erivf3,.st-emotion-cache-1gulkj5 {
-       display: flex;
-       -webkit-box-align: center;
-       align-items: center;
-       flex-direction: column;
-       justify-content: space-around;
-       height: 175px;
-
-       }
-
-    </style>
-    """, unsafe_allow_html=True)
-
 st.title("🖼️ PhotoMaster")
 
 # Page layout
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    uploaded_files = st.file_uploader("",type=["xlsx", "csv", "jpg", "jpeg", "png","jfif", "avif", "webp","heic"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("", type=["xlsx", "csv", "jpg", "jpeg", "png", "jfif", "avif", "webp", "heic", "pdf"], accept_multiple_files=True)
 with col2:
     st.markdown("")
     remove_bg = st.checkbox("Remove background")
@@ -147,23 +130,27 @@ with col2:
     resize_fg = st.checkbox("Resize")
     st.checkbox("Compress and Convert Format")
     st.button("Submit")
+
 images_info = []
 if uploaded_files:
     if len(uploaded_files) == 1 and uploaded_files[0].name.endswith(('.xlsx', '.csv')):
         file_type = 'excel'
     elif all(file.type.startswith('image/') for file in uploaded_files):
         file_type = 'images'
+    elif len(uploaded_files) == 1 and uploaded_files[0].type == 'application/pdf':
+        file_type = 'pdf'
     else:
         file_type = 'mixed'
 
     if file_type == 'mixed':
-        st.error("You should work with one type of file: either an Excel file or images.")
+        st.error("You should work with one type of file: either an Excel file, images, or a PDF.")
     else:
         if file_type == 'excel':
             uploaded_file = uploaded_files[0]
             if uploaded_file.name.endswith('.xlsx'):
                 xl = pd.ExcelFile(uploaded_file)
                 for sheet_name in xl.sheet_names:
+                    st.write(f"Processing sheet: {sheet_name}")  # Debugging print
                     df = xl.parse(sheet_name)
                     if 'links' in df.columns and ('name' in df.columns):
                         df.dropna(subset=['links'], inplace=True)
@@ -221,6 +208,18 @@ if uploaded_files:
         elif file_type == 'images':
             images_info = [(file.name, file) for file in uploaded_files]
 
+        elif file_type == 'pdf':
+            uploaded_file = uploaded_files[0]
+            pdf = pdfium.PdfDocument(uploaded_file)
+            fn = uploaded_file.name
+            images_info = []
+            for i in range(len(pdf)):
+                page = pdf[i]
+                image = page.render(scale=1.45).to_pil()
+                img_byte_arr = BytesIO()
+                image.save(img_byte_arr, format='JPEG')
+                images_info.append((f"{fn.rsplit('.', 1)[0]}_page_{i + 1}.jpg", img_byte_arr.getvalue()))
+
 if images_info:
     bg_image = None
     if add_bg:
@@ -245,6 +244,8 @@ if images_info:
             if isinstance(url_or_file, str):
                 url = convert_drive_link(url_or_file)
                 image_content = download_image(url)
+            elif isinstance(url_or_file, bytes):
+                image_content = url_or_file
             else:
                 image_content = url_or_file.read()
 
@@ -253,9 +254,6 @@ if images_info:
                     processed_image = remove_background(image_content)
                     ext = 'png'
                 else:
-                    ##processed_image = resize_image(image_content)
-                    ##ext = 'png'
-                    ##---------------------------------------------------------------
                     size = (1290, 789) if "banner" in name.lower() else (1024, 1024)
                     processed_image = resize_image(image_content, size=size)
                     ext = "png"
